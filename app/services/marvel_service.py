@@ -1,27 +1,37 @@
-import requests
 import os
 import hashlib
+import requests
+from dotenv import load_dotenv
 
+load_dotenv()
 #la url de la pagina donde se hacen las consultas, y las llaves necesarias para construir el hash que se solicita
 MARVEL_API_URL = "http://gateway.marvel.com/v1/public/characters"
-PUBLIC_KEY = os.getenv("MARVEL_PUBLIC_KEY", "21e747281799536f07f2088ee1596574")
-PRIVATE_KEY = os.getenv("MARVEL_PRIVATE_KEY", "ebda728eb54e983a20493b770db9de0f01fcd6de")
 
-#Hacemos la comunicacion con la api de marvel, el parametro name es que usaremos para buscar
-def get_character_from_marvel(name):
-    params = {
-        "name": name,
-        "apikey": PUBLIC_KEY,
-    }
-    response = requests.get(MARVEL_API_URL, params=params)
-    if response.status_code == 200:
-        data = response.json()
-        if data["data"]["results"]:
-            character = data["data"]["results"][0]
-            return {
-                "marvel_id": character["id"],
-                "name": character["name"],
-                "description": character.get("description", "No description available"),
-                "comics": [comic["name"] for comic in character["comics"]["items"]]
-            }
-    return None
+PUBLIC_KEY = os.getenv("MARVEL_PUBLIC_KEY")
+PRIVATE_KEY = os.getenv("MARVEL_PRIVATE_KEY")
+class MarvelService:
+    contador = 1 #contador para el timestap
+
+    @classmethod
+    def get_character_from_marvel(cls,name):
+        #consulta un personaje en la api de marvel y devueve los datos como json
+        ts = cls.contador
+        prehash = f"{ts}{PRIVATE_KEY}{PUBLIC_KEY}"
+        params = {
+            "name": name,
+            "apikey": PUBLIC_KEY,
+            "ts":ts,
+            "hash": hashlib.md5(prehash.encode()).hexdigest()
+        }
+
+        response = requests.get(MARVEL_API_URL, params=params)
+
+        if response.status_code == 200:
+            data = response.json()
+            cls.contador += 1
+            return data
+        elif response.status_code == 404:
+            return {"status_code": 404, "message": "perosnaje no encontrado"}
+        else:
+            return {"status_code": response.status_code, "message": "error" }
+

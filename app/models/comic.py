@@ -1,28 +1,25 @@
 from app.utils.db import db
+from app.models.base import BaseModel
 
-class Comic(db.Model):
+#python maneja un sistema de prioridad en el cual las clases hijas tienen prioridad a la hora de buscar metodos
+#es decir, el exits que existe en comic tiene prioridad sobre el exist en base
+
+class Comic(BaseModel):
     __tablename__ = 'comic'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
     #enlazamos el id del personaje que sale en este comic
     character_id = db.Column(db.Integer, db.ForeignKey('character.id'),nullable=False)
-
+    #modificamos el to_dict que esta en base agregandole mas informacion
     def to_dict(self):
-        return {
-            "id": self.id,
-            "name": self.name
-        }
-    def save(self):
-        # this method verify if the object exist using the name, if not, create a new object
-        existing_comic = Comic.query.filter_by(name=self.name).first()
-        if not existing_comic:
-            db.session.add(self)
-        else:
-            existing_comic.name = self.name
-        db.session.commit()
-        return existing_comic
+        base_dict = super(Comic, self).to_dict()
+        base_dict.update({
+            'character_id':self.character_id
+        })
+        return base_dict
 
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-        return self
+    def exists(self):
+        return Comic.query.filter_by(name=self.name).first()
+
+
+
+
+

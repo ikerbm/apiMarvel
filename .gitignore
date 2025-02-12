@@ -1,0 +1,8 @@
+# Ignorar archivos de MySQL
+database/mysql.sock
+database/auto.cnf
+database/binlog.index
+database/ib_buffer_pool
+
+# Ignorar archivos de entorno virtual (si es necesario)
+venv/
