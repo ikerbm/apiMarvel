@@ -1,4 +1,4 @@
-from flask import Blueprint,jsonify,render_template
+from flask import redirect,Blueprint,jsonify,render_template,request,url_for
 from app.models.character_model import Character
 from app.models.comic_model import Comic
 from app.utils.db import db
@@ -55,12 +55,14 @@ def get_character(name):
             db.session.commit()
 
             #devolver el codigo 201 (created) cuando se crea un nuevo recurso
+            print(character)
             return jsonify(character.to_dict()),201
         else:
             character.name = marvel_data["name"],
             character.description = marvel_data["description"]
             character.image_url = create_img_url(marvel_data)
             db.session.commit()
+            print(character.to_dict())
             #devolver el codigo 200 (ok) cuando el personaje ya existe
             return jsonify(character.to_dict()),200
     except Exception as e:
@@ -74,3 +76,13 @@ def list_characters():
     characters = Character.query.all()
     #se los mandamos al template
     return render_template("characters_list.html", characters=characters)
+
+#ruta para mostrar el formulario de agregar personaje
+@character_bp.route("/add_character")
+def add_character_form():
+    return render_template('add_character.html')
+
+#ruta para manejar el envio de formulario
+@character_bp.route("/add_character",methods=["POST"])
+def add_character():
+    pass

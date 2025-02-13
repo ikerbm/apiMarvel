@@ -1,7 +1,5 @@
 import os
 import hashlib
-import urllib
-
 import requests
 from dotenv import load_dotenv
 

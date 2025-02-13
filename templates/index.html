@@ -20,6 +20,9 @@
         <!-- Los resultados se mostrarán aquí -->
     </div>
 
+    <!-- Botón para agregar un nuevo personaje -->
+    <p><a href="/add_character"><button>Agregar nuevo personaje</button></a></p>
+
     <!-- Enlace a la lista de personajes -->
     <p><a href="/characters">Ver lista de personajes</a></p>
 
@@ -43,7 +46,7 @@
                         <ul>
                             ${data.comics.map(comic => `<li>${comic}</li>`).join('')}
                         </ul>
-                        <img src="${data.thumbnail}" alt="${data.name}" style="max-width: 100%; height: auto;">
+                        <img src="${data.image_url}" alt="${data.name}" style="max-width: 10%; height: auto;">
                     `;
                 })
                 .catch(error => {

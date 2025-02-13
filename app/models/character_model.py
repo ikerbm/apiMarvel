@@ -14,6 +14,7 @@ class Character(BaseModel):
         base_dict.update({
             'marvel_id': self.marvel_id,
             'description': self.description,
-            "comics": [comic.name for comic in self.comics]  # Agrega los cómics en formato de lista
+            "comics": [comic.name for comic in self.comics], # Agrega los cómics en formato de lista
+            "image_url": self.image_url
         })
         return base_dict
