@@ -7,7 +7,8 @@ from app.models.base_model import BaseModel
 class Comic(BaseModel):
     __tablename__ = 'comic'
     #enlazamos el id del personaje que sale en este comic
-    character_id = db.Column(db.Integer, db.ForeignKey('character.id'),nullable=False)
+    character_id = db.Column(db.Integer, db.ForeignKey('character.id', ondelete = 'CASCADE'),nullable=False)
+
     #modificamos el to_dict que esta en base agregandole mas informacion
     def to_dict(self):
         base_dict = super(Comic, self).to_dict()

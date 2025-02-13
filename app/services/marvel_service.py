@@ -1,11 +1,14 @@
 import os
 import hashlib
+import urllib
+
 import requests
 from dotenv import load_dotenv
 
 load_dotenv()
 #la url de la pagina donde se hacen las consultas, y las llaves necesarias para construir el hash que se solicita
-MARVEL_API_URL = "http://gateway.marvel.com/v1/public/characters"
+MARVEL_API_URL = "http://gateway.marvel.com/v1/public"
+                  #"/characters"
 
 PUBLIC_KEY = os.getenv("MARVEL_PUBLIC_KEY")
 PRIVATE_KEY = os.getenv("MARVEL_PRIVATE_KEY")
@@ -24,7 +27,9 @@ class MarvelService:
             "hash": hashlib.md5(prehash.encode()).hexdigest()
         }
 
-        response = requests.get(MARVEL_API_URL, params=params)
+        #creamos la url para la consulta de los personajes
+        url = f"{MARVEL_API_URL}/characters"
+        response = requests.get(url, params=params)
 
         if response.status_code == 200:
             data = response.json()

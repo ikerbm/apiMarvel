@@ -15,8 +15,7 @@ def create_app():
         application.register_blueprint(character_bp) #, url_prefix="/" solo se usa cuando se va a utilizar
     return application
 app = create_app()
-    # Ruta principal para la página de inicio
-
+# Ruta principal para la página de inicio
 @app.route('/')
 def index():
     return render_template('index.html')  # Renderiza la plantilla index.html

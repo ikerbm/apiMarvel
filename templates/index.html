@@ -3,81 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Inicio</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            padding: 20px;
-        }
-        .search-results {
-            margin-top: 20px;
-        }
-    </style>
+    <title>Búsqueda de Personajes de Marvel</title>
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-center">¡Bienvenido a mi aplicación Flask!</h1>
-        <p class="text-center">Esta es la página de inicio. Aquí puedes buscar personajes de Marvel y ver sus detalles.</p>
+    <h1>Búsqueda de Personajes de Marvel</h1>
+    <p>Ingresa el nombre de un personaje para buscar sus detalles.</p>
 
-        <!-- Formulario de búsqueda -->
-        <form id="search-form" class="d-flex justify-content-center mb-4">
-            <input type="text" id="search-input" class="form-control w-50" placeholder="Buscar personaje..." required>
-            <button type="submit" class="btn btn-primary ms-2">Buscar</button>
-        </form>
+    <!-- Formulario de búsqueda -->
+    <form id="search-form">
+        <input type="text" id="search-input" placeholder="Nombre del personaje" required>
+        <button type="submit">Buscar</button>
+    </form>
 
-        <!-- Resultados de búsqueda -->
-        <div id="search-results" class="search-results">
-            <!-- Los resultados se mostrarán aquí -->
-        </div>
-
-        <!-- Enlaces útiles -->
-        <div class="text-center mt-4">
-            <p>Visita la <a href="/characters">lista de personajes</a> para ver más.</p>
-        </div>
+    <!-- Resultados de búsqueda -->
+    <div id="search-results">
+        <!-- Los resultados se mostrarán aquí -->
     </div>
 
-    <!-- Bootstrap JS y dependencias -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- jQuery para manejar el formulario -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Enlace a la lista de personajes -->
+    <p><a href="/characters">Ver lista de personajes</a></p>
+
+    <!-- Script para manejar la búsqueda -->
     <script>
-        $(document).ready(function() {
-            // Manejar el envío del formulario
-            $('#search-form').on('submit', function(event) {
-                event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
+        document.getElementById('search-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
 
-                const searchQuery = $('#search-input').val(); // Obtener el valor de búsqueda
+            const searchQuery = document.getElementById('search-input').value; // Obtener el valor de búsqueda
 
-                // Hacer una solicitud AJAX a la API
-                $.ajax({
-                    url: `/${searchQuery}`,
-                    method: 'GET',
-                    success: function(response) {
-                        // Mostrar los resultados en la página
-                        $('#search-results').html(`
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">${response.name}</h5>
-                                    <p class="card-text">${response.description || 'No hay descripción disponible.'}</p>
-                                    <p><strong>Cómics:</strong></p>
-                                    <ul>
-                                        ${response.comics.map(comic => `<li>${comic}</li>`).join('')}
-                                    </ul>
-                                </div>
-                            </div>
-                        `);
-                    },
-                    error: function(xhr) {
-                        // Mostrar un mensaje de error
-                        $('#search-results').html(`
-                            <div class="alert alert-danger" role="alert">
-                                No se encontró el personaje. Intenta con otro nombre.
-                            </div>
-                        `);
-                    }
+            // Hacer una solicitud AJAX a la API
+            fetch(`/${searchQuery}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Mostrar los resultados en la página
+                    const resultsDiv = document.getElementById('search-results');
+                    resultsDiv.innerHTML = `
+                        <h2>${data.name}</h2>
+                        <p>${data.description || 'No hay descripción disponible.'}</p>
+                        <p><strong>Cómics:</strong></p>
+                        <ul>
+                            ${data.comics.map(comic => `<li>${comic}</li>`).join('')}
+                        </ul>
+                        <img src="${data.thumbnail}" alt="${data.name}" style="max-width: 100%; height: auto;">
+                    `;
+                })
+                .catch(error => {
+                    // Mostrar un mensaje de error
+                    const resultsDiv = document.getElementById('search-results');
+                    resultsDiv.innerHTML = `<p style="color: red;">No se encontró el personaje "${searchQuery}". Intenta con otro nombre.</p>`;
                 });
-            });
         });
     </script>
 </body>

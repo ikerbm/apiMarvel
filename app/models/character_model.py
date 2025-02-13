@@ -5,7 +5,8 @@ class Character(BaseModel):
     __tablename__ = 'character'
     marvel_id = db.Column(db.Integer, unique=True, nullable=False)
     description = db.Column(db.Text, nullable=True)
-    comics = db.relationship("Comic", backref="character", lazy=True)
+    comics = db.relationship("Comic", backref="character", lazy=True, cascade="all, delete-orphan")
+    image_url = db.Column(db.Text, nullable=True)
 
     # modificamos el to_dict que esta en base agregandole mas informacion
     def to_dict(self):
