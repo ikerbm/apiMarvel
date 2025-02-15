@@ -1,32 +1,23 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Personajes de Marvel</title>
-</head>
+{% extends "base.html" %}
+
+{% block content %}
 <body>
     <h1>Lista de Personajes de Marvel</h1>
-
-    <ul>
+    <div class="characters-container">
         {% for character in characters %}
-            <li>
-                <h3>{{ character.name }}</h3>
-                <p>{{ character.description or 'No hay descripción disponible.' }}</p>
-                <!--
-                <p><strong>Cómics:</strong></p>
-                <ul>
-                    {% for comic in character.comics %}
-                        <li>{{ comic.name }}</li>
-                    {% endfor %}
-                </ul>
-                !-->
-                <img src="{{ character.image_url }}" alt="{{ character.name }}" style="max-width: 10%; height: auto;">
-            </li>
+        <div class ="character-card">
+            <h3> {{character.name}}</h3>
+            <p>{{character.description or 'No hay descripcion disponible.'}}</p>
+            <!--
+            <p><strong>Cómics:</strong></p>
+            <ul>
+                {% for comic in character.comics %}
+                    <li>{{ comic.name }}</li>
+                {% endfor %}
+            </ul>
+            -->
+            <img src="{{ character.image_url }}" alt="{{ character.name }}" class ="character-image">
+        </div>
         {% endfor %}
-    </ul>
-
-    <!-- Enlace para volver a la página de búsqueda -->
-    <p><a href="/">Volver a la búsqueda</a></p>
-</body>
-</html>
+    </div>
+{% endblock %}

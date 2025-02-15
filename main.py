@@ -18,6 +18,6 @@ app = create_app()
 # Ruta principal para la página de inicio
 @app.route('/')
 def index():
-    return render_template('index.html')  # Renderiza la plantilla index.html
+    return render_template('index.html', title="INICIO")  # Renderiza la plantilla index.html
 
 

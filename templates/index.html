@@ -1,60 +1,42 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Búsqueda de Personajes de Marvel</title>
-</head>
-<body>
-    <h1>Búsqueda de Personajes de Marvel</h1>
-    <p>Ingresa el nombre de un personaje para buscar sus detalles.</p>
+{% extends "base.html" %}
 
-    <!-- Formulario de búsqueda -->
-    <form id="search-form">
-        <input type="text" id="search-input" placeholder="Nombre del personaje" required>
-        <button type="submit">Buscar</button>
+{% block content %}
+<section>
+    <h2>Bienvenido a la Página de Inicio</h2>
+    <p>Explora el universo de Marvel y gestiona tus personajes favoritos.</p>
+
+    <!-- Formulario de busqueda -->
+    <form id="search-form" >
+        <input type="text" id="search-input" name="name" placeholder="Nombre del personaje" required>
+        <button type="submit" class="action-button">Buscar Personaje</button>
     </form>
-
-    <!-- Resultados de búsqueda -->
+    <!--Resultados de busqueda -->
     <div id="search-results">
-        <!-- Los resultados se mostrarán aquí -->
+        <!-- los resultados se mostraran aqui -->
     </div>
 
-    <!-- Botón para agregar un nuevo personaje -->
-    <p><a href="/add_character"><button>Agregar nuevo personaje</button></a></p>
+    <!-- Botones de navegación -->
+    <div class="buttons-container">
+        <a href="{{ url_for('character_bp.list_characters') }}">
+            <button class="action-button">Ver Lista de Personajes</button>
+        </a>
+        {#<!--
+        <a href="{{ url_for('agregar_personaje') }}">
+            <button class="action-button">Agregar Personaje</button>
+        </a>
+        -->#}
+    </div>
+</section>
+<!-- Script para manejar la búsqueda -->
+<script>
+    document.getElementById('search-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
 
-    <!-- Enlace a la lista de personajes -->
-    <p><a href="/characters">Ver lista de personajes</a></p>
+        const searchQuery = document.getElementById('search-input').value; // Obtener el valor de búsqueda
+        const actionUrl = "{{ url_for('character_bp.get_character', name='') }}" + encodeURIComponent(searchQuery);
 
-    <!-- Script para manejar la búsqueda -->
-    <script>
-        document.getElementById('search-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Evitar que el formulario se envíe de forma tradicional
-
-            const searchQuery = document.getElementById('search-input').value; // Obtener el valor de búsqueda
-
-            // Hacer una solicitud AJAX a la API
-            fetch(`/${searchQuery}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Mostrar los resultados en la página
-                    const resultsDiv = document.getElementById('search-results');
-                    resultsDiv.innerHTML = `
-                        <h2>${data.name}</h2>
-                        <p>${data.description || 'No hay descripción disponible.'}</p>
-                        <p><strong>Cómics:</strong></p>
-                        <ul>
-                            ${data.comics.map(comic => `<li>${comic}</li>`).join('')}
-                        </ul>
-                        <img src="${data.image_url}" alt="${data.name}" style="max-width: 10%; height: auto;">
-                    `;
-                })
-                .catch(error => {
-                    // Mostrar un mensaje de error
-                    const resultsDiv = document.getElementById('search-results');
-                    resultsDiv.innerHTML = `<p style="color: red;">No se encontró el personaje "${searchQuery}". Intenta con otro nombre.</p>`;
-                });
-        });
-    </script>
-</body>
-</html>
+        // Redirigir a la ruta correcta
+        window.location.href = actionUrl;
+    });
+</script>
+{% endblock %}

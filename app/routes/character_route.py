@@ -14,7 +14,7 @@ def create_img_url(marvel_data):
 character_bp = Blueprint("character_bp", __name__)
 #Hacemos la comunicacion con la api de marvel, el parametro name es que usaremos para buscar
 #/<name> es un parametro que entra a la url
-@character_bp.route("/<name>",methods=["GET"])
+@character_bp.route("/characters/<name>",methods=["GET"])
 def get_character(name):
     #validamos que el nombre no este vacio
     if not name or not isinstance(name,str):
@@ -55,19 +55,17 @@ def get_character(name):
             db.session.commit()
 
             #devolver el codigo 201 (created) cuando se crea un nuevo recurso
-            print(character)
             return jsonify(character.to_dict()),201
         else:
             character.name = marvel_data["name"],
             character.description = marvel_data["description"]
             character.image_url = create_img_url(marvel_data)
             db.session.commit()
-            print(character.to_dict())
             #devolver el codigo 200 (ok) cuando el personaje ya existe
             return jsonify(character.to_dict()),200
     except Exception as e:
         #manejar errores inesperados
-        return jsonify({"error" : "Ocurrio un erro inetrno en el servidor","details":str(e)}),500
+        return jsonify({"error" : "Ocurrio un error interno en el servidor","details":str(e)}),500
 
 #ruta para mostrar la lista de personajes
 @character_bp.route("/characters",methods=["GET"])
@@ -75,7 +73,7 @@ def list_characters():
     #sacamos la info de los personajes en la BD
     characters = Character.query.all()
     #se los mandamos al template
-    return render_template("characters_list.html", characters=characters)
+    return render_template("characters_list.html", characters=characters,title="Personajes")
 
 #ruta para mostrar el formulario de agregar personaje
 @character_bp.route("/add_character")

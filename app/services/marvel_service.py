@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 load_dotenv()
 #la url de la pagina donde se hacen las consultas, y las llaves necesarias para construir el hash que se solicita
 MARVEL_API_URL = "http://gateway.marvel.com/v1/public"
-                  #"/characters"
 
 PUBLIC_KEY = os.getenv("MARVEL_PUBLIC_KEY")
 PRIVATE_KEY = os.getenv("MARVEL_PRIVATE_KEY")
@@ -34,7 +33,7 @@ class MarvelService:
             cls.contador += 1
             return data
         elif response.status_code == 404:
-            return {"status_code": 404, "message": "perosnaje no encontrado"}
+            return {"status_code": 404, "message": "personaje no encontrado"}
         else:
             return {"status_code": response.status_code, "message": "error" }
 
