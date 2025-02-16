@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template,flash
 from app.routes.character_route import character_bp  # Importar Blueprint de personajes
 from app.utils.db import db,migrate
 from app.config import Config
@@ -6,6 +6,7 @@ from app.config import Config
 #creamos app con flask y decimos que su configuracon vendra del archivo config.py
 def create_app():
     application = Flask(__name__, template_folder='templates')
+    application.secret_key="secret"
     application.config.from_object(Config)
     #inicializamos la base de datos de la app y hacemos las migraciones
     db.init_app(application)

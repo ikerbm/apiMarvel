@@ -17,7 +17,44 @@
             </ul>
             -->
             <img src="{{ character.image_url }}" alt="{{ character.name }}" class ="character-image">
+            <!-- Botón para borrar el personaje -->
+            <button class="delete-button" onclick="deleteCharacter({{ character.marvel_id }})">Borrar</button>
         </div>
         {% endfor %}
     </div>
+
+<script>
+function deleteCharacter(marvel_id) {
+    if (confirm("¿Estás seguro de que quieres eliminar este personaje?")) {
+        // Hacer una solicitud DELETE a la ruta correspondiente
+        fetch(`/characters/${marvel_id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                // Eliminar la tarjeta del personaje de la página
+                const card = document.querySelector(`.character-card[data-marvel-id="${marvel_id}"]`);
+                if (card) {
+                    card.remove();
+                }
+                alert(data.message); // Mostrar un mensaje de éxito
+                // Redirigir a la lista de personajes después de 1 segundo
+                setTimeout(() => {
+                    window.location.href = "{{ url_for('character_bp.list_characters') }}";
+                }, 1000); // 1000 milisegundos = 1 segundo
+            } else if (data.error) {
+                alert(data.error); // Mostrar un mensaje de error
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Ocurrió un error al eliminar el personaje.");
+        });
+    }
+}
+</script>
 {% endblock %}

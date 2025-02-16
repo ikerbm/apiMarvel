@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+    <h1>Detalles del Personaje</h1>
+
+    <!-- Tarjeta del personaje -->
+    <div class="character-card">
+        <h2>{{ character.name }}</h2>
+        <p>{{ character.description }}</p>
+        <img src="{{ character.image_url }}" alt="{{ character.name }}" class="character-image">
+
+        <!-- Lista de cómics -->
+        {% if character.comics %}
+            <h3>Cómics:</h3>
+            <ul>
+                {% for comic in character.comics %}
+                    <li>{{ comic.name }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No hay cómics disponibles para este personaje.</p>
+        {% endif %}
+    </div>
+
+    <!-- Enlace para volver a la página de inicio -->
+    <p><a href="{{ url_for('index') }}" class="back-link">Volver a la búsqueda</a></p>
+</section>
+{% endblock %}
