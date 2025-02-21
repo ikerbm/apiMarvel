@@ -19,6 +19,10 @@
             <img src="{{ character.image_url }}" alt="{{ character.name }}" class ="character-image">
             <!-- Botón para borrar el personaje -->
             <button class="delete-button" onclick="deleteCharacter({{ character.marvel_id }})">Borrar</button>
+
+            <a href="{{ url_for('character_bp.edit_character', marvel_id=character.marvel_id) }}">
+                    <button class="edit-button">Editar</button>
+                </a>
         </div>
         {% endfor %}
     </div>
@@ -56,5 +60,7 @@ function deleteCharacter(marvel_id) {
         });
     }
 }
+
+
 </script>
 {% endblock %}

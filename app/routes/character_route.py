@@ -121,3 +121,21 @@ def delete_character(marvel_id):
         db.session.rollback()
         return jsonify({"error": "Ocurrió un error al eliminar el personaje", "details": str(e)}), 500
 
+@character_bp.route("/characters/<int:marvel_id>/edit",methods=["GET","POST"])
+def edit_character(marvel_id):
+    #obtener el personaje de la BD
+    character = Character.query.filter_by(marvel_id=marvel_id).first()
+    if request.method == "POST":
+        #procesar formulario de edicion
+        character.name = request.form.get("name")
+        character.description = request.form.get("description")
+
+        #Guardar los cambios en la BD
+        db.session.commit()
+
+        #redirigir a la lista de personajes
+        return redirect(url_for("character_bp.list_characters"))
+
+    #mostrar el formulario de edicion(Get)
+    return render_template("edit_character.html", character=character)
+

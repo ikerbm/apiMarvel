@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body>
+    <h1>Editar Personaje: {{ character.name }}</h1>
+
+    <form method="POST" action="{{ url_for('character_bp.edit_character', marvel_id=character.marvel_id) }}">
+        <div class="form-group">
+            <label for="name">Nombre:</label>
+            <input type="text" id="name" name="name" value="{{ character.name }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Descripción:</label>
+            <textarea id="description" name="description">{{ character.description }}</textarea>
+        </div>
+
+        <button type="submit" class="action-button">Guardar Cambios</button>
+    </form>
+
+    <!-- Enlace para volver a la lista de personajes -->
+    <p><a href="{{ url_for('character_bp.list_characters') }}" class="back-link">Volver a la lista</a></p>
+</body>
+{% endblock %}
